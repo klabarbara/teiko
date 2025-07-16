@@ -1,3 +1,4 @@
+import os
 import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html, Input, Output, State, no_update, dash_table
@@ -276,4 +277,5 @@ def update_baseline(tab, cond, treat, stype, time_point):
     return row
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0', port=8050)
+    port = int(os.environ.get("PORT", 8050))
+    app.run(debug=False, host='0.0.0.0', port=port)
