@@ -1,2 +1,2 @@
-release: python load_db.py
+release: python cytometry/load_db.py
 web:     gunicorn dashboard:server
