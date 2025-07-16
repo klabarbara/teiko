@@ -1,5 +1,8 @@
 # Bob Loblaw ~~Law Blog~~ Cytometry Trial Dashboard
 
+Dashboard hosted on heroku: https://cytometry-e202f4040d6a.herokuapp.com/
+
+
 ## Installation and Running
 
 Written using python 3.12.9
