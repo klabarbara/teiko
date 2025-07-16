@@ -1,9 +1,16 @@
 import pandas as pd
+import os
 from sqlalchemy import (
     Column, String, Integer, Boolean, ForeignKey, create_engine
 )
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, Session
+
+
+# right now using heroku to host and don't want to deal with their pricing/limits
+# so database url falls back to ephemeral sqlite for demo purposes
+DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///cytometry.db")
+engine = create_engine(DATABASE_URL, echo=False)
 
 Base = declarative_base()
 
