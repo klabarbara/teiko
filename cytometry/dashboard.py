@@ -5,14 +5,18 @@ from dash import dcc, html, Input, Output, State, no_update, dash_table
 import plotly.express as px
 import pandas as pd
 from sqlalchemy import create_engine
-
+from cytometry.db import init_db
 from cytometry.analysis import (
     test_significant_populations,
     get_baseline_samples,
     summarize_baseline
 )
+DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite:///cytometry.db")
+engine = create_engine(DATABASE_URL, echo=False)
 
-engine = create_engine("sqlite:///cytometry.db")
+# Ensure tables exist before any read_sql calls
+init_db(DATABASE_URL)
+
 
 sample_list = pd.read_sql(
     "SELECT DISTINCT sample_id FROM samples ORDER BY sample_id", engine
