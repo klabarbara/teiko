@@ -6,7 +6,7 @@ import plotly.express as px
 import pandas as pd
 from sqlalchemy import create_engine
 
-from analysis import (
+from cytometry.analysis import (
     test_significant_populations,
     get_baseline_samples,
     summarize_baseline

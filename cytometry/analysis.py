@@ -1,6 +1,4 @@
 import pandas as pd
-from sqlalchemy.orm import Session
-from db import Sample, CellCount
 
 import seaborn as sns
 import matplotlib.pyplot as plt
