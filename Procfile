@@ -1,2 +1,1 @@
-release: python cytometry/load_db.py
-web:     gunicorn cytometry.dashboard:server
+web: python cytometry/load_db.py && gunicorn cytometry.dashboard:server --log-file -
