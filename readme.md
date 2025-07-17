@@ -1,6 +1,9 @@
 # Bob Loblaw ~~Law Blog~~ Cytometry Trial Dashboard
 
+
+
 Dashboard hosted on heroku: https://cytometry-e202f4040d6a.herokuapp.com/
+(Note: Patched compare_responders() in analysis.py to aggregate and filter in SQL, as it was dragging. Did so after submission deadline; understood if it doesn't count, but it irked me.)
 
 ## Installation and Running
 
