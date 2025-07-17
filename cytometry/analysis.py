@@ -26,26 +26,27 @@ def compare_responders(engine, condition="melanoma", treatment="miraclib"):
     per sample, then rejoins to get counts per population and responds/nonresponds status    
     """
     sql = """
-    WITH totals AS (
+      WITH filtered AS (
+        SELECT c.sample_id, c.population, c.count
+        FROM cell_counts c
+        JOIN samples s USING (sample_id)
+        WHERE s.condition=:cond
+          AND s.treatment=:treat
+          AND s.sample_type='PBMC'
+      ), totals AS (
+        SELECT sample_id, SUM(count) AS total_count
+        FROM filtered
+        GROUP BY sample_id
+      )
       SELECT
-        sample_id,
-        SUM(count) AS total_count
-      FROM cell_counts
-      GROUP BY sample_id
-    )
-    SELECT
-      c.sample_id AS sample,
-      t.total_count,
-      c.population,
-      c.count,
-      s.response
-    FROM cell_counts c
-    JOIN totals t USING (sample_id)
-    JOIN samples s
-      ON s.sample_id = c.sample_id
-     AND s.condition = :cond
-     AND s.treatment = :treat
-     AND s.sample_type = 'PBMC'
+        f.sample_id AS sample,
+        t.total_count,
+        f.population,
+        f.count,
+        s.response
+      FROM filtered f
+      JOIN totals t USING (sample_id)
+      JOIN samples s USING (sample_id);
     """
     df = pd.read_sql(sql, engine, params={"cond": condition, "treat": treatment})
     df["percentage"] = df["count"] / df["total_count"] * 100
