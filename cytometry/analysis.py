@@ -19,22 +19,37 @@ def compute_relative_frequencies(engine):
     return df
 
 def compare_responders(engine, condition="melanoma", treatment="miraclib"):
-    """boxplot data & significance tests between responders vs non-responders."""
-    freq = compute_relative_frequencies(engine)
-    mask = (
-        (freq["population"].notna()) &
-        (freq["sample"].isin(
-            pd.read_sql("SELECT sample_id FROM samples WHERE "
-                        "condition=:cond AND treatment=:treat AND sample_type='PBMC'",
-                        engine, params={"cond":condition,"treat":treatment})["sample_id"]
-        ))
+    """
+    boxplot data & significance tests between responders vs non-responders.
+    original implementation parsed entire dataset in pandas, causing
+    unacceptable lag. moved filtering up into SQL, aggregate total counts
+    per sample, then rejoins to get counts per population and responds/nonresponds status    
+    """
+    sql = """
+    WITH totals AS (
+      SELECT
+        sample_id,
+        SUM(count) AS total_count
+      FROM cell_counts
+      GROUP BY sample_id
     )
-    sub = freq[mask].merge(
-         pd.read_sql("SELECT sample_id, response FROM samples", engine),
-         left_on="sample", right_on="sample_id"
-    )
-
-    return sub
+    SELECT
+      c.sample_id AS sample,
+      t.total_count,
+      c.population,
+      c.count,
+      s.response
+    FROM cell_counts c
+    JOIN totals t USING (sample_id)
+    JOIN samples s
+      ON s.sample_id = c.sample_id
+     AND s.condition = :cond
+     AND s.treatment = :treat
+     AND s.sample_type = 'PBMC'
+    """
+    df = pd.read_sql(sql, engine, params={"cond": condition, "treat": treatment})
+    df["percentage"] = df["count"] / df["total_count"] * 100
+    return df
 
 def plot_population_boxplots(engine, condition="melanoma", treatment="miraclib"):
     """
