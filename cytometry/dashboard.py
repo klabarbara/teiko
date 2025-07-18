@@ -5,8 +5,8 @@ from dash import dcc, html, Input, Output, State, no_update, dash_table
 import plotly.express as px
 import pandas as pd
 from sqlalchemy import create_engine
-from cytometry.db import init_db
-from cytometry.analysis import (
+from db import init_db
+from analysis import (
     test_significant_populations,
     get_baseline_samples,
     summarize_baseline

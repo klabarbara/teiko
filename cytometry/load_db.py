@@ -1,4 +1,4 @@
-from cytometry.db import init_db, load_csv
+from db import init_db, load_csv
 
 if __name__ == "__main__":
     engine = init_db("sqlite:///cytometry.db")
