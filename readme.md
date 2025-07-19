@@ -1,4 +1,4 @@
-# Bob Loblaw ~~Law Blog~~ Cytometry Trial Dashboard
+# Bob Loblaw Cytometry Trial Dashboard
 
 
 
